@@ -1,5 +1,7 @@
 console.log("Google Slide受付通知システム: content.js loaded");
 let socket
+let overlayHideTimer = null
+const OVERLAY_ID = "reception-notification-overlay"
 
 // 受け付けたときにスライドの上に受付通知を表示する
 const setOverlayReseversion = (node) => {
@@ -8,7 +10,31 @@ const setOverlayReseversion = (node) => {
     return;
   }
 
-  // TODO: 受付通知の画面を作り、nodeにappendする。display:noneで作っておいて、受付があったときにdisplay:blockにする
+  if (node.querySelector(`#${OVERLAY_ID}`)) {
+    return;
+  }
+
+  node.style.position = "relative";
+
+  const overlay = document.createElement("div");
+  overlay.id = OVERLAY_ID;
+  overlay.textContent = "〇○参戦！！";
+  overlay.style.display = "none";
+  overlay.style.position = "absolute";
+  overlay.style.top = "50%";
+  overlay.style.left = "50%";
+  overlay.style.transform = "translate(-50%, -50%)";
+  overlay.style.zIndex = "9999";
+  overlay.style.padding = "24px 40px";
+  overlay.style.borderRadius = "16px";
+  overlay.style.background = "rgba(0, 0, 0, 0.75)";
+  overlay.style.color = "#fff";
+  overlay.style.fontSize = "48px";
+  overlay.style.fontWeight = "bold";
+  overlay.style.textAlign = "center";
+  overlay.style.pointerEvents = "none";
+
+  node.appendChild(overlay);
 }
 
 // DOMの変更を検知する
@@ -59,7 +85,20 @@ const login = async () => {
   })
 
   socket.on("reserve", () => {
-    // TODO: 受付通知を表示する。display:noneのdivをdisplay:blockにする
+    const overlay = document.getElementById(OVERLAY_ID);
+    if (!overlay) {
+      return;
+    }
+
+    overlay.style.display = "block";
+
+    if (overlayHideTimer) {
+      clearTimeout(overlayHideTimer);
+    }
+
+    overlayHideTimer = setTimeout(() => {
+      overlay.style.display = "none";
+    }, 3000);
   })
 }
 
