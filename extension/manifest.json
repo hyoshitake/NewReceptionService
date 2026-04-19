@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Google Slide Vote System",
+    "version": "1.0.1",
+    "description": "GoogleSlideの横に投票結果を表示します",
+    "permissions": ["scripting", "storage"],
+    "options_page": "options.html",
+    "action": {
+        "default_icon": "resource/slidevote.png"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": [ "resource/ninja_icon.png", "resource/vote.mp3" ],
+        "matches": ["<all_urls>"]
+      }
+    ],
+    "content_scripts": [
+      {
+        "js": ["content.js", "socket.io.min.js", "qrcode.min.js"],
+        "matches": ["https://docs.google.com/presentation/*"]
+      },
+      {
+        "css": ["content.css"],
+        "matches": ["https://docs.google.com/presentation/*"]
+      }
+    ]
+}
