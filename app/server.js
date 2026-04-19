@@ -27,9 +27,9 @@ io.on("connection", (socket) => {
 
   // 受付があったときの処理
   socket.on("post", (msg) => {
-    console.log('received:');
-    io.to(msg.roomCode).emit("reserve");
-    console.log('broadcasted reserve:');
+    console.log('received:', msg);
+    io.to(msg.roomCode).emit("reserve", { name: msg.name || "〇○" });
+    console.log('broadcasted reserve:', msg.roomCode, msg.name);
   });
 });
 

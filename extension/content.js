@@ -84,12 +84,14 @@ const login = async () => {
     socket.emit("join", { roomCode: roomCode, name: 'slide' });
   })
 
-  socket.on("reserve", () => {
+  socket.on("reserve", (msg) => {
     const overlay = document.getElementById(OVERLAY_ID);
     if (!overlay) {
       return;
     }
 
+    const name = msg?.name || "〇○";
+    overlay.textContent = `${name}参戦！！`;
     overlay.style.display = "block";
 
     if (overlayHideTimer) {
