@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hyoshitake/googleSlideVoteSystem.git"
+    "url": "git+https://github.com/hyoshitake/NewReceptionService.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hyoshitake/googleSlideVoteSystem/issues"
+    "url": "https://github.com/hyoshitake/NewReceptionService/issues"
   },
-  "homepage": "https://github.com/hyoshitake/googleSlideVoteSystem#readme",
+  "homepage": "https://github.com/hyoshitake/NewReceptionService#readme",
   "description": "",
   "dependencies": {
     "express": "^4.21.2",

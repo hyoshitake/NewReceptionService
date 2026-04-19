@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Google Slide Vote System",
+    "name": "Google Slide Reception System",
     "version": "1.0.1",
-    "description": "GoogleSlideの横に投票結果を表示します",
+    "description": "GoogleSlideの横に受付通知を表示します",
     "permissions": ["scripting", "storage"],
     "options_page": "options.html",
     "action": {

@@ -1,14 +1,13 @@
 <html>
 <head>
-  <title>Vote</title>
+  <title>受付</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <div style="text-align: center;">
-    <audio id="audio" src="./audio/post"></audio>
-    <div style="font-size: 5rem">投票する</div>
+    <div style="font-size: 5rem">受付する</div>
     <div style="margin-top: 20px;">
-      <a class="btn-emergency" id="voteButton">
+      <a class="btn-emergency" id="reserveButton">
         <span class="btn-emergency-bottom"></span>
         <span class="btn-emergency-top"><span>押す</span></span>
       </a>
@@ -27,16 +26,11 @@
       socket.emit("join", { roomCode: roomCode });
     })
 
-    const button = document.getElementById('voteButton');
+    const button = document.getElementById('reserveButton');
 
     button.addEventListener('click', (e) => {
       e.preventDefault();
       socket.emit('post', { roomCode: roomCode });
-      try {
-        // 初回は失敗するのでtry-catchで囲む
-        audio.load();
-      }catch(e){}
-      audio.play(); //audioを再生
     });
   </script>
   <style>

@@ -13,30 +13,23 @@ const io = new Server(httpServer, {
   }
 });
 
-app.get("/vote", (req, res) => {
-  res.sendFile(__dirname + "/vote.html");
+app.get("/reserve", (req, res) => {
+  res.sendFile(__dirname + "/reserve.html");
 });
 
-app.get('/audio/post', (req, res) => {
-  fs.readFile('./post.mp3', (err, data) => {
-    res.send(data);
-  });
-});
-
-app.get("/manage", (req, res) => {
-  res.sendFile(__dirname + "/manage.html");
-});
-
+// socket.ioの接続設定
 io.on("connection", (socket) => {
+  // 接続があったときの処理
   socket.on("join", (msg) => {
     console.log('received join:' + msg.roomCode);
     socket.join(msg.roomCode);
   })
 
+  // 受付があったときの処理
   socket.on("post", (msg) => {
-    console.log('received vote:');
-    io.to(msg.roomCode).emit("vote");
-    console.log('broadcasted vote:');
+    console.log('received:');
+    io.to(msg.roomCode).emit("reserve");
+    console.log('broadcasted reserve:');
   });
 });
 
