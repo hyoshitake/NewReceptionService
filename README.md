@@ -29,6 +29,12 @@ docker-compose up -d
 http://localhost:13000/reception?room=demo
 ```
 
+ログ確認画面は次のURLで開けます。
+
+```text
+http://localhost:13000/log
+```
+
 > `room` の値は任意ですが、Chrome 拡張側で設定する `RoomCode` と同じ値にしてください。
 
 ## 利用手順
@@ -65,6 +71,7 @@ Chrome 拡張は以下から利用できます。
 ## 補足
 
 - 通知は Socket.IO を使ってリアルタイム配信されます
+- `/log` で Socket.IO の動作ログをリアルタイム確認できます
 - 現在の実装では認証やデータ永続化はありません
 - Google Slides (`docs.google.com`) 上での利用を前提にしています
 

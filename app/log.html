@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.IO ログ</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: 2.8rem;
+    }
+
+    p {
+      margin-top: 0;
+      color: #cbd5e1;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    #logView {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      min-height: 60vh;
+      line-height: 1.6;
+      font-size: 1.4rem;
+      overflow-x: auto;
+    }
+
+    .log-line {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .error {
+      color: #fca5a5;
+    }
+
+    .info {
+      color: #93c5fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Socket.IO 動作ログ</h1>
+    <p>サーバーの console.log / console.error をリアルタイム表示します。</p>
+
+    <div class="toolbar">
+      <button id="clearButton">画面表示をクリア</button>
+      <label><input id="autoScroll" type="checkbox" checked> 自動スクロール</label>
+    </div>
+
+    <div id="logView">接続中...</div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const logView = document.getElementById('logView');
+    const clearButton = document.getElementById('clearButton');
+    const autoScroll = document.getElementById('autoScroll');
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function scrollToBottom() {
+      if (autoScroll.checked) {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+    }
+
+    function appendEntry(entry) {
+      const time = new Date(entry.timestamp).toLocaleString('ja-JP');
+      const levelClass = entry.level === 'error' ? 'error' : (entry.level === 'info' ? 'info' : '');
+      const line = document.createElement('div');
+      line.className = 'log-line ' + levelClass;
+      line.innerHTML = '[' + escapeHtml(time) + '] ' + escapeHtml(entry.message);
+      logView.appendChild(line);
+      scrollToBottom();
+    }
+
+    const socket = io();
+
+    socket.on('connect', () => {
+      if (logView.textContent.trim() === '接続中...') {
+        logView.textContent = '';
+      }
+      appendEntry({
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: 'ログ画面に接続しました'
+      });
+    });
+
+    socket.on('log:init', (entries) => {
+      logView.textContent = '';
+      if (!entries || entries.length === 0) {
+        appendEntry({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: 'まだログはありません'
+        });
+        return;
+      }
+
+      entries.forEach((entry) => appendEntry(entry));
+    });
+
+    socket.on('server-log', (entry) => {
+      appendEntry(entry);
+    });
+
+    clearButton.addEventListener('click', () => {
+      logView.textContent = '';
+      appendEntry({
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: '画面表示をクリアしました'
+      });
+    });
+  </script>
+</body>
+</html>
