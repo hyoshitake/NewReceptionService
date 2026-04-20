@@ -14,16 +14,16 @@
 
 - `app/server.js`
   - Express サーバー本体
-  - `/reserve` を配信
-  - `join` / `post` / `reserve` のイベントを処理
+  - `/reception` を配信
+  - `join` / `post` / `reception` のイベントを処理
 
-- `app/reserve.html`
+- `app/reception.html`
   - 受付用の画面
   - URLクエリの `room` をもとにルームへ参加する
 
 - `extension/content.js`
   - Google Slides の画面上に通知オーバーレイを描画する
-  - `reserve` イベントを受信して表示を更新する
+  - `reception` イベントを受信して表示を更新する
 
 - `extension/options.html` / `extension/options.js`
   - `domain` と `roomCode` を保存する設定画面
@@ -42,13 +42,13 @@ docker-compose up -d
 ### ローカル確認URL
 
 ```text
-http://localhost:13000/reserve?room=demo
+http://localhost:13000/reception?room=demo
 ```
 
 ## 変更時のルール
 
 1. Socket.IO のイベント名を揃えること
-   - サーバー、受付画面、拡張機能で `join` / `post` / `reserve` を一致させる
+   - サーバー、受付画面、拡張機能で `join` / `post` / `reception` を一致させる
 
 2. 設定キー名を揃えること
    - 拡張機能の保存キーは `domain` と `roomCode`
@@ -74,6 +74,6 @@ http://localhost:13000/reserve?room=demo
 変更後は少なくとも次を確認してください。
 
 - サーバーが起動すること
-- `/reserve?room=任意の値` で受付画面が開くこと
+- `/reception?room=任意の値` で受付画面が開くこと
 - 拡張側の `Domain` と `RoomCode` が実際の導線と一致していること
 - README の手順が実装と矛盾していないこと

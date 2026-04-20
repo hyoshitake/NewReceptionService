@@ -1,10 +1,10 @@
 console.log("Google Slide受付通知システム: content.js loaded");
 let socket
-let overlayHideTimer = null
+let receptionOverlayHideTimer = null
 const OVERLAY_ID = "reception-notification-overlay"
 
 // 受け付けたときにスライドの上に受付通知を表示する
-const setOverlayReseversion = (node) => {
+const setReceptionOverlay = (node) => {
   // スライドの表示がない場合は処理をしない
   if (!node.classList.contains("punch-full-screen-element")) {
     return;
@@ -47,7 +47,7 @@ const observer = new MutationObserver(records => {
       if(node.nodeType !== Node.ELEMENT_NODE) {
         return;
       }
-      setOverlayReseversion(node);
+      setReceptionOverlay(node);
     });
   })
 })
@@ -56,19 +56,19 @@ observer.observe(document.body, {
   childList: true
 });
 
-getRoomCode = async () => {
+const getRoomCode = async () => {
   const data = await chrome.storage.local.get('roomCode')
   return data.roomCode;
 }
 
-getDomain = async () => {
+const getDomain = async () => {
   const data = await chrome.storage.local.get('domain')
   return data.domain;
 }
 
-// 設定されたルームコードを使ってログインする
-const login = async () => {
-  // ログイン情報を取得する
+// 設定されたルームコードを使って受付通知へ接続する
+const connectReceptionSocket = async () => {
+  // 設定情報を取得する
   const roomCode = await getRoomCode();
   const domain = await getDomain();
 
@@ -84,24 +84,24 @@ const login = async () => {
     socket.emit("join", { roomCode: roomCode, name: 'slide' });
   })
 
-  socket.on("reserve", (msg) => {
+  socket.on("reception", (receptionMessage) => {
     const overlay = document.getElementById(OVERLAY_ID);
     if (!overlay) {
       return;
     }
 
-    const name = msg?.name || "〇○";
+    const name = receptionMessage?.name || "〇○";
     overlay.textContent = `${name}参戦！！`;
     overlay.style.display = "block";
 
-    if (overlayHideTimer) {
-      clearTimeout(overlayHideTimer);
+    if (receptionOverlayHideTimer) {
+      clearTimeout(receptionOverlayHideTimer);
     }
 
-    overlayHideTimer = setTimeout(() => {
+    receptionOverlayHideTimer = setTimeout(() => {
       overlay.style.display = "none";
     }, 3000);
   })
 }
 
-login()
+connectReceptionSocket()

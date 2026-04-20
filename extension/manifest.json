@@ -6,11 +6,11 @@
     "permissions": ["scripting", "storage"],
     "options_page": "options.html",
     "action": {
-        "default_icon": "resource/slidevote.png"
+        "default_icon": "resource/slide-reception.png"
     },
     "web_accessible_resources": [
       {
-        "resources": [ "resource/ninja_icon.png", "resource/vote.mp3" ],
+        "resources": [ "resource/ninja_icon.png", "resource/reception.mp3" ],
         "matches": ["<all_urls>"]
       }
     ],

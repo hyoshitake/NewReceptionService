@@ -13,8 +13,8 @@ const io = new Server(httpServer, {
   }
 });
 
-app.get("/reserve", (req, res) => {
-  res.sendFile(__dirname + "/reserve.html");
+app.get("/reception", (req, res) => {
+  res.sendFile(__dirname + "/reception.html");
 });
 
 // socket.ioの接続設定
@@ -26,10 +26,10 @@ io.on("connection", (socket) => {
   })
 
   // 受付があったときの処理
-  socket.on("post", (msg) => {
-    console.log('received:', msg);
-    io.to(msg.roomCode).emit("reserve", { name: msg.name || "〇○" });
-    console.log('broadcasted reserve:', msg.roomCode, msg.name);
+  socket.on("post", (receptionData) => {
+    console.log('received:', receptionData);
+    io.to(receptionData.roomCode).emit("reception", { name: receptionData.name || "〇○" });
+    console.log('broadcasted reception:', receptionData.roomCode, receptionData.name);
   });
 });
 

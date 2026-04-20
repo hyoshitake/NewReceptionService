@@ -26,7 +26,7 @@ docker-compose up -d
 起動後、受付画面は次のURLで開けます。
 
 ```text
-http://localhost:13000/reserve?room=demo
+http://localhost:13000/reception?room=demo
 ```
 
 > `room` の値は任意ですが、Chrome 拡張側で設定する `RoomCode` と同じ値にしてください。
@@ -56,7 +56,7 @@ Chrome 拡張は以下から利用できます。
 
 ### 設定例
 
-- 受付ページ: `http://localhost:13000/reserve?room=demo`
+- 受付ページ: `http://localhost:13000/reception?room=demo`
 - 拡張の `Domain`: `http://localhost:13000`
 - 拡張の `RoomCode`: `demo`
 
