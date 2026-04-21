@@ -5,18 +5,9 @@
     "description": "GoogleSlideの横に受付通知を表示します",
     "permissions": ["scripting", "storage"],
     "options_page": "options.html",
-    "action": {
-        "default_icon": "resource/slide-reception.png"
-    },
-    "web_accessible_resources": [
-      {
-        "resources": [ "resource/ninja_icon.png", "resource/reception.mp3" ],
-        "matches": ["<all_urls>"]
-      }
-    ],
     "content_scripts": [
       {
-        "js": ["content.js", "socket.io.min.js", "qrcode.min.js"],
+        "js": ["content.js", "socket.io.min.js"],
         "matches": ["https://docs.google.com/presentation/*"]
       },
       {

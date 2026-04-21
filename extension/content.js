@@ -18,21 +18,7 @@ const setReceptionOverlay = (node) => {
 
   const overlay = document.createElement("div");
   overlay.id = OVERLAY_ID;
-  overlay.textContent = "〇○参戦！！";
-  overlay.style.display = "none";
-  overlay.style.position = "absolute";
-  overlay.style.top = "50%";
-  overlay.style.left = "50%";
-  overlay.style.transform = "translate(-50%, -50%)";
-  overlay.style.zIndex = "9999";
-  overlay.style.padding = "24px 40px";
-  overlay.style.borderRadius = "16px";
-  overlay.style.background = "rgba(0, 0, 0, 0.75)";
-  overlay.style.color = "#fff";
-  overlay.style.fontSize = "48px";
-  overlay.style.fontWeight = "bold";
-  overlay.style.textAlign = "center";
-  overlay.style.pointerEvents = "none";
+  // スタイルは content.css に委ねる
 
   node.appendChild(overlay);
 }
@@ -91,15 +77,31 @@ const connectReceptionSocket = async () => {
     }
 
     const name = receptionMessage?.name || "〇○";
-    overlay.textContent = `${name}参戦！！`;
-    overlay.style.display = "block";
+    overlay.textContent = `🎉 ${name} 参戦！！ 🎉`;
+
+    // 既存アニメーション・タイマーをリセット
+    overlay.classList.remove("is-entering", "is-exiting");
+    // 強制リフロー（クラス削除直後に再追加するため）
+    void overlay.offsetWidth;
 
     if (receptionOverlayHideTimer) {
       clearTimeout(receptionOverlayHideTimer);
     }
 
+    // スライドイン開始
+    overlay.classList.add("is-entering");
+
+    // 3秒後にスライドアウト開始
     receptionOverlayHideTimer = setTimeout(() => {
-      overlay.style.display = "none";
+      overlay.classList.remove("is-entering");
+      overlay.classList.add("is-exiting");
+
+      // アニメーション終了後にクラスを除去して画面外に戻す
+      overlay.addEventListener("animationend", (e) => {
+        if (e.animationName === "slideOutToRight") {
+          overlay.classList.remove("is-exiting");
+        }
+      }, { once: true });
     }, 3000);
   })
 }
