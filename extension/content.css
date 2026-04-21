@@ -28,11 +28,7 @@
 }
 
 @keyframes rainbow-border {
-  0%   { box-shadow: 0 0 30px 10px #ff0080, 0 0 60px 20px #ff008055; }
-  25%  { box-shadow: 0 0 30px 10px #ffaa00, 0 0 60px 20px #ffaa0055; }
-  50%  { box-shadow: 0 0 30px 10px #00e5ff, 0 0 60px 20px #00e5ff55; }
-  75%  { box-shadow: 0 0 30px 10px #00ff88, 0 0 60px 20px #00ff8855; }
-  100% { box-shadow: 0 0 30px 10px #ff0080, 0 0 60px 20px #ff008055; }
+  0%, 100% { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25); }
 }
 
 @keyframes text-shimmer {
@@ -57,29 +53,16 @@
   pointer-events: none;
   white-space: nowrap;
 
-  /* 背景: 光沢ある濃いグラデーション */
-  background: linear-gradient(135deg, #1a0033 0%, #3d0066 40%, #660033 100%);
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  /* 背景: 白 */
+  background: #ffffff;
+  border: 3px solid #222;
 
-  /* テキスト: シマーグラデーション */
+  /* テキスト */
   font-size: clamp(40px, 5.5vw, 76px);
   font-weight: 900;
   text-align: center;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  background-image: linear-gradient(
-    90deg,
-    #ffe066 0%,
-    #fff 20%,
-    #ff80bf 40%,
-    #80ffee 60%,
-    #fff 80%,
-    #ffe066 100%
-  );
-  background-size: 200% auto;
+  color: #111111;
   text-shadow: none;
-  filter: drop-shadow(0 0 12px rgba(255, 220, 80, 0.9));
 }
 
 /* ========== 入場アニメーション ========== */
@@ -89,8 +72,7 @@
   animation:
     slideInFromLeft 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     rainbow-border  1.2s linear infinite,
-    pulse           0.7s ease-in-out infinite,
-    text-shimmer    1.8s linear infinite;
+    pulse           0.7s ease-in-out infinite;
 }
 
 /* ========== 退場アニメーション ========== */
@@ -99,6 +81,5 @@
   visibility: visible;
   animation:
     slideOutToRight 0.45s cubic-bezier(0.64, 0, 0.78, 0) forwards,
-    rainbow-border  1.2s linear infinite,
-    text-shimmer    1.8s linear infinite;
+    rainbow-border  1.2s linear infinite;
 }
