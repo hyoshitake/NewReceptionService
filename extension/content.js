@@ -52,6 +52,49 @@ const getDomain = async () => {
   return data.domain;
 }
 
+// メッセージキューとアニメーション状態
+const messageQueue = [];
+let isAnimating = false;
+
+// キューから1件取り出してアニメーションを再生する
+const processQueue = () => {
+  if (isAnimating || messageQueue.length === 0) {
+    return;
+  }
+
+  const overlay = document.getElementById(OVERLAY_ID);
+  if (!overlay) {
+    messageQueue.length = 0;
+    return;
+  }
+
+  isAnimating = true;
+  const name = messageQueue.shift();
+
+  overlay.textContent = `🎉 ${name} 参戦！！ 🎉`;
+  overlay.classList.remove("is-entering", "is-exiting");
+  // 強制リフロー（クラス削除直後に再追加するため）
+  void overlay.offsetWidth;
+
+  // スライドイン開始
+  overlay.classList.add("is-entering");
+
+  // 3秒後にスライドアウト開始
+  receptionOverlayHideTimer = setTimeout(() => {
+    overlay.classList.remove("is-entering");
+    overlay.classList.add("is-exiting");
+
+    // アニメーション終了後にクラスを除去して次のキューを処理する
+    overlay.addEventListener("animationend", (e) => {
+      if (e.animationName === "slideOutToRight") {
+        overlay.classList.remove("is-exiting");
+        isAnimating = false;
+        processQueue();
+      }
+    }, { once: true });
+  }, 3000);
+}
+
 // 設定されたルームコードを使って受付通知へ接続する
 const connectReceptionSocket = async () => {
   // 設定情報を取得する
@@ -71,38 +114,10 @@ const connectReceptionSocket = async () => {
   })
 
   socket.on("reception", (receptionMessage) => {
-    const overlay = document.getElementById(OVERLAY_ID);
-    if (!overlay) {
-      return;
-    }
-
     const name = receptionMessage?.name || "〇○";
-    overlay.textContent = `🎉 ${name} 参戦！！ 🎉`;
-
-    // 既存アニメーション・タイマーをリセット
-    overlay.classList.remove("is-entering", "is-exiting");
-    // 強制リフロー（クラス削除直後に再追加するため）
-    void overlay.offsetWidth;
-
-    if (receptionOverlayHideTimer) {
-      clearTimeout(receptionOverlayHideTimer);
-    }
-
-    // スライドイン開始
-    overlay.classList.add("is-entering");
-
-    // 3秒後にスライドアウト開始
-    receptionOverlayHideTimer = setTimeout(() => {
-      overlay.classList.remove("is-entering");
-      overlay.classList.add("is-exiting");
-
-      // アニメーション終了後にクラスを除去して画面外に戻す
-      overlay.addEventListener("animationend", (e) => {
-        if (e.animationName === "slideOutToRight") {
-          overlay.classList.remove("is-exiting");
-        }
-      }, { once: true });
-    }, 3000);
+    // キューに積んで順番に処理する
+    messageQueue.push(name);
+    processQueue();
   })
 }
 
